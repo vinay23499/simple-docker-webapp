@@ -5,11 +5,6 @@ pipeline {
         jdk 'JDK21'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/vinayk2499/simple-docker-webapp.git'
-            }
-        }
         stage('Build & Test (Maven)') {
             steps {
                 sh 'mvn clean verify'
