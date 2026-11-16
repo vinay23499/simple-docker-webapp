@@ -10,7 +10,7 @@ pipeline {
 
         stage('Compile') {
             steps {
-                sh 'mvn clean compile -DskipTests'
+                sh "${tool('Maven3')}/bin/mvn clean compile -DskipTests"
             }
         }
 
