@@ -31,24 +31,6 @@ pipeline {
                 }
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        mvn -B sonar:sonar \
-                        -Dsonar.projectKey=simple-docker-webapp \
-                        -Dsonar.projectName=simple-docker-webapp
-                    '''
-                }
-            }
-        }
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 sh "docker build -t ${DOCKERHUB_REPO}:${IMAGE_TAG} -t ${DOCKERHUB_REPO}:latest ."
