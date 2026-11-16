@@ -1,27 +1,25 @@
 pipeline {
     agent any
-    tools {
-        maven 'Maven3'
-        jdk 'JDK21'
-    }
+
     stages {
-        stage('Build & Test (Maven)') {
+        stage('Checkout') {
             steps {
-                sh 'mvn clean verify'
+                checkout scm
             }
-            post {
-                always {
-                    junit testResults: 'target/surefire-reports/*.xml', allowEmptyResults: true
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    sh "${tool('sonar-scanner')}/bin/sonar-scanner -Dsonar.projectKey=simple-docker-webapp -Dsonar.sources=. -Dsonar.host.url=http://3.106.115.248:9000"
                 }
             }
         }
-    }
-    post {
-        success {
-            echo 'Build SUCCESS - Maven build passed!'
-        }
-        failure {
-            echo 'Pipeline failed - check console output above.'
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t simple-docker-webapp .'
+            }
         }
     }
 }
