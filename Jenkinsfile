@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'maven'
-        jdk 'JDK17'
-    }
-
     environment {
         DOCKER_IMAGE = 'vinay1239/simple-docker-webapp'
         DOCKER_TAG = 'latest'
